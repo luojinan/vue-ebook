@@ -1,5 +1,6 @@
 <template>
   <div class="ebook">
+    <span class="icon-share"></span>
     电子书阅读器页面
     <p>测试scss</p>
     <ebook-reader></ebook-reader>
