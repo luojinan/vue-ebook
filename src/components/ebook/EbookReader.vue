@@ -33,9 +33,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '../../scss/global.scss';
 .ebook-reader {
-  p {
-    color: green;
-  }
 }
 </style>
