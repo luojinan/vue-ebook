@@ -2,7 +2,7 @@
   <div class="ebook">
     <ebook-header v-show="menuVisible"></ebook-header>
     <ebook-reader></ebook-reader>
-    <ebook-footer></ebook-footer>
+    <ebook-footer :isShow="menuVisible"></ebook-footer>
   </div>
 </template>
 

@@ -10,6 +10,7 @@
 </template>
 
 <script>
+import {ThemeList} from '@/utils/config.js'
 import { ebookMixin } from '@/utils/mixin.js'
 import Epub from 'epubjs'
 export default {
@@ -48,9 +49,39 @@ export default {
         width: innerWidth,
         height: innerHeight
       })
+      this.setCurrentBook(book)
       // 把生成的dom渲染进页面
       this.rendition.display()
-    }
+
+      // 要操作主题颜色的话，需要先给👆themes实例注册主题颜色列表
+      this.registerTheme()
+      this.setTheme(0)  // 初始化主题颜色
+
+      // 获取locations进度对象（异步）
+      book.ready.then(()=>{
+        this.setNavigation(book.navigation) // 目录
+        return book.locations.generate()  // 进度
+      }).then(()=>{
+        console.log('异步加载进度完成');
+        this.locations = book.locations
+        this.setBookAvailable(true)
+      })
+    },
+    // themes实例注册主题颜色列表
+    registerTheme(){
+      if(this.rendition.themes){
+        ThemeList.forEach(item=>{
+          this.rendition.themes.register(item.name,item.style)
+        })
+      }
+    },
+    // 设置默认主题颜色
+    setTheme(){
+      this.setDefaultTheme(0)
+      if (this.rendition.themes) {
+        this.rendition.themes.select(ThemeList[this.defaultTheme||0].name)
+      }
+    },
   },
   mounted() {
     const bookName = this.$route.params.filename.split('|').join('/')
