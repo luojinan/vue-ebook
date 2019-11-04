@@ -7,7 +7,12 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    redirect: 'ebook'
+    redirect: '/test/localStorage'
+  },
+  {
+    path: '/test/localStorage',
+    name: 'localStorage',
+    component: () => import('@/views/test/localStorage.vue'),
   },
   {
     path: '/ebook',

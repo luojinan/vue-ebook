@@ -13,7 +13,6 @@
   <transition name="slide-up">
     <div class="ebook-footer_setter" v-show="isShowSet&&settingVisible != 1">
       <ebook-setting-font v-if="settingVisible==4"></ebook-setting-font>
-      <!-- <ebook-setting-font-popup v-if="settingVisible==4"></ebook-setting-font-popup> -->
       <ebook-setting-theme v-if="settingVisible==3"></ebook-setting-theme>
       <ebook-setting-progress v-if="settingVisible==2"></ebook-setting-progress>
     </div>
@@ -29,11 +28,13 @@
     <div class="toc-mask" v-show="isShowSet&&settingVisible==1" @click="isShowSet = false"></div>
   </transition>
 
+  <ebook-setting-font-popup v-if="settingVisible==4"></ebook-setting-font-popup>
+
 </div>
 </template>
 <script>
 import EbookSettingFont from '@/components/ebook/EbookSettingFont'
-// import EbookSettingFontPopup from '@/components/ebook/EbookSettingFontPopup'
+import EbookSettingFontPopup from '@/components/ebook/EbookSettingFontPopup'
 import EbookSettingTheme from '@/components/ebook/EbookSettingTheme'
 import EbookSettingProgress from '@/components/ebook/EbookSettingProgress'
 import Toc from './Toc.vue'
@@ -43,7 +44,7 @@ export default {
   mixins: [ebookMixin],
   components:{
     EbookSettingFont,
-    // EbookSettingFontPopup,
+    EbookSettingFontPopup,
     EbookSettingTheme,
     EbookSettingProgress,
     Toc

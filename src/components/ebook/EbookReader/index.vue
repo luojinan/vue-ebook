@@ -25,6 +25,7 @@ export default {
     showControl() {
       console.log('点击显示上下控制栏');
       this.setMenuVisible(!this.menuVisible)
+      this.fontFamilyVisible&&this.setFontFamilyVisible(false)  //关闭字体选择器
     },
     // 点击左边蒙板，触发ebook类的上一页方法
     prePage() {

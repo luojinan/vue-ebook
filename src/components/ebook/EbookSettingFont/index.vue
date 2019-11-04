@@ -29,6 +29,9 @@
         :style="{fontSize:`${fontSizeList[fontSizeList.length-1]}px`}"
       >A</div>
     </div>
+    <div class="setter-fontfamily" @click="showFontFamilyPopup">
+      default
+    </div>
   </div>
 </template>
 
@@ -48,15 +51,22 @@ export default {
 
       this.currentBook.rendition.themes.fontSize(`${fontSize}px`)
     },
+    showFontFamilyPopup(){
+      console.log('点击选择字体')
+      this.setFontFamilyVisible(true)
+    }
   }
 }
 </script>
 <style lang="scss" scoped>
 @import "../../../scss/global.scss";
 .setting-font {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
   .setter-fontsize {
+    flex: 2;
     display: flex;
-    height: 100%;
     // 字号选择，左右A预览部分
     .setter-fontsize_preview {
       flex: 0 0 px2rem(40);
@@ -124,6 +134,10 @@ export default {
         }
       }
     }
+  }
+  .setter-fontfamily{
+    flex: 1;
+    @include center;
   }
 }
 </style>
