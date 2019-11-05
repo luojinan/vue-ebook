@@ -17,4 +17,6 @@ export const ThemeList=[
   }}
 ]
 
-export default {ThemeList}
+export const fontFamilyList=['Default','Cabin','Days One','Montserrat','Tangerine']
+
+export default {ThemeList, fontFamilyList}

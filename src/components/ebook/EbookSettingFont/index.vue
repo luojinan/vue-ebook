@@ -30,7 +30,7 @@
       >A</div>
     </div>
     <div class="setter-fontfamily" @click="showFontFamilyPopup">
-      default
+      {{defaultFontFamily}}
     </div>
   </div>
 </template>

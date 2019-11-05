@@ -8,18 +8,36 @@
       <p>选择字体</p>
     </div>
     <div class="setter-popup_list--wrapper">
-
+      <div 
+        class="setter-popup_list--item" 
+        v-for="(item,index) in fontFamilyList" 
+        :key="index"
+        @click="selectedFontFamily(item)">
+        <p :class="{'selected':defaultFontFamily==item}">{{item}}</p>
+        <p class="selected" v-if="defaultFontFamily==item">✔</p>
+      </div>
     </div>
   </div>
 </transition>
 </template>
 <script>
 import {ebookMixin} from '@/utils/mixin.js'
+import {fontFamilyList} from '@/utils/config.js'
 export default {
   mixins: [ebookMixin],
+  data(){
+    return {
+      fontFamilyList
+    }
+  },
   methods: {
     closeFontFamilyPopup(){
       this.setFontFamilyVisible(false)
+    },
+    selectedFontFamily(item){
+      this.setFDefaultFontFamily(item)
+      console.log(item);
+      this.currentBook.rendition.themes.font(item)
     }
   },
   created () {
@@ -39,6 +57,7 @@ export default {
   background-color: #fff;
   box-shadow: 0 px2rem(-4) px2rem(6) rgba(0, 0, 0, .1);
   .setter-popup_title{
+    position: relative;
     padding: px2rem(15);
     box-sizing: border-box;
     border-bottom: 1px solid #b8b9bb;
@@ -50,12 +69,17 @@ export default {
       height: 100%;
       @include center;
     }
-    p{
-
-    }
   }
   .setter-popup_list--wrapper{
-
+    .setter-popup_list--item{
+      display: flex;
+      justify-content: space-between;
+      padding: px2rem(15);
+      .selected{
+        color: #346cb9;
+        font-weight: bold;
+      }
+    }
   }
 }
 </style>

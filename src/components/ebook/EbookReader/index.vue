@@ -67,6 +67,19 @@ export default {
         this.locations = book.locations
         this.setBookAvailable(true)
       })
+      // 字体文件css引入epubjs库中（注册）
+     this.rendition.hooks.content.register(contents=>{
+       Promise.all([
+         contents.addStylesheet(`${process.env.VUE_APP_RES_URL}/fonts/daysOne.css`),
+         contents.addStylesheet(`${process.env.VUE_APP_RES_URL}/fonts/cabin.css`),
+         contents.addStylesheet(`${process.env.VUE_APP_RES_URL}/fonts/montserrat.css`),
+         contents.addStylesheet(`${process.env.VUE_APP_RES_URL}/fonts/tangerine.css`)
+       ]).then(()=>{
+         console.log('字体全部加载完毕')
+       })
+     }) 
+
+
     },
     // themes实例注册主题颜色列表
     registerTheme(){
