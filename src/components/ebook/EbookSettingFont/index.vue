@@ -37,6 +37,7 @@
 
 <script>
 import {ebookMixin} from '@/utils/mixin.js'
+import {saveFontSize} from '@/utils/myStorage.js'
 export default {
   mixins: [ebookMixin],
   data(){
@@ -47,8 +48,8 @@ export default {
   methods:{
     // 选中字号
     setFontSize(fontSize){
-      this.setDefaultFontSize(fontSize)
-
+      this.setDefaultFontSize(fontSize) // 存入vuex
+      saveFontSize(this.fileName,fontSize)  // 存入本地缓存
       this.currentBook.rendition.themes.fontSize(`${fontSize}px`)
     },
     showFontFamilyPopup(){

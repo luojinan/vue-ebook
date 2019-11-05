@@ -11,7 +11,7 @@
 
 <script>
 import {ThemeList} from '@/utils/config.js'
-import {getFontFamily,setFontFamily} from '@/utils/myStorage.js'
+import {getFontFamily,setFontFamily,getFontSize,saveFontSize} from '@/utils/myStorage.js'
 import { ebookMixin } from '@/utils/mixin.js'
 import Epub from 'epubjs'
 export default {
@@ -61,6 +61,13 @@ export default {
           this.rendition.themes.font(font)  // 初始化字体
           this.setFDefaultFontFamily(font)  // 本地缓存的设置存入vuex
         }
+        let fontSize = getFontSize(this.fileName)
+        if(!fontSize)saveFontSize(this.fileName,this.defaultFontSize)
+        else{
+          this.rendition.themes.fontSize(`${fontSize}px`)  // 初始化字体大小
+          this.setDefaultFontSize(fontSize)  // 本地缓存的设置存入vuex
+        }
+        
       })
 
       // 要操作主题颜色的话，需要先给👆themes实例注册主题颜色列表
