@@ -63,6 +63,14 @@ const StorageAPI = {
   set(key, value,options) {
     // 判断key值，判断val值，判断时间值
     key = _checkKey(key)
+    if(!options){
+      try {
+        this.storage.setItem(key, _serialize(value))
+      } catch (err) {
+        console.log('存入本地缓存失败',err)
+      }
+      return _serialize(value)
+    }
     // 判断options入参，不是对象的话，转换为对象
     if (typeof options === 'number') {
       options = {

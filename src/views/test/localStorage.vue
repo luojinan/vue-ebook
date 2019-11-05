@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import Storage from './util'
+import Storage from '@/utils/StorageClass'
 export default {
   data(){
     return {
@@ -17,7 +17,7 @@ export default {
   },
   methods: {
     setStorage(){
-      console.log(this.storage.set('key1',{val1:'val'},1))
+      console.log(this.storage.set('key1',{val1:'val'},60))
     },
     getStorage(){
       console.log(this.storage.get('key1')) 

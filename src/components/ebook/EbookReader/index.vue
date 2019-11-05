@@ -11,6 +11,7 @@
 
 <script>
 import {ThemeList} from '@/utils/config.js'
+import {getFontFamily,setFontFamily} from '@/utils/myStorage.js'
 import { ebookMixin } from '@/utils/mixin.js'
 import Epub from 'epubjs'
 export default {
@@ -52,7 +53,15 @@ export default {
       })
       this.setCurrentBook(book)
       // 把生成的dom渲染进页面
-      this.rendition.display()
+      // 并初始化一些设置，字体等
+      this.rendition.display().then(()=>{
+        let font = getFontFamily(this.fileName)
+        if(!font)setFontFamily(this.fileName,this.defaultFontFamily)
+        else{
+          this.rendition.themes.font(font)  // 初始化字体
+          this.setFDefaultFontFamily(font)  // 本地缓存的设置存入vuex
+        }
+      })
 
       // 要操作主题颜色的话，需要先给👆themes实例注册主题颜色列表
       this.registerTheme()

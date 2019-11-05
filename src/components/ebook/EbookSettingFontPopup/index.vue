@@ -22,6 +22,7 @@
 </template>
 <script>
 import {ebookMixin} from '@/utils/mixin.js'
+import {setFontFamily} from '@/utils/myStorage.js'
 import {fontFamilyList} from '@/utils/config.js'
 export default {
   mixins: [ebookMixin],
@@ -35,8 +36,8 @@ export default {
       this.setFontFamilyVisible(false)
     },
     selectedFontFamily(item){
-      this.setFDefaultFontFamily(item)
-      console.log(item);
+      this.setFDefaultFontFamily(item)  // 存入vuex
+      setFontFamily(this.fileName,item) // 存入本地缓存
       this.currentBook.rendition.themes.font(item)
     }
   },
