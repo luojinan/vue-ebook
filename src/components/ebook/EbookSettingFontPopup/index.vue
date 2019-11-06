@@ -38,7 +38,12 @@ export default {
     selectedFontFamily(item){
       this.setFDefaultFontFamily(item)  // 存入vuex
       setFontFamily(this.fileName,item) // 存入本地缓存
-      this.currentBook.rendition.themes.font(item)
+      if (item === 'Default') {
+        this.currentBook.rendition.themes.font('Times New Roman')
+      } else {
+        this.currentBook.rendition.themes.font(item)
+      }
+      // this.currentBook.rendition.themes.font(item)
     }
   },
   created () {
