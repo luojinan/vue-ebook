@@ -11,7 +11,13 @@
 
 <script>
 import {themeList} from '@/utils/config.js'
-import {getFontFamily,setFontFamily,getFontSize,saveFontSize} from '@/utils/myStorage.js'
+import {
+  getFontFamily,
+  setFontFamily,
+  getFontSize,
+  saveFontSize,
+  saveTheme,
+  getTheme} from '@/utils/myStorage.js'
 import { ebookMixin } from '@/utils/mixin.js'
 import Epub from 'epubjs'
 export default {
@@ -107,9 +113,14 @@ export default {
     },
     // 设置默认主题颜色
     setTheme(){
-      this.setDefaultTheme(0)
+      let defaultTheme = getTheme(this.fileName)
+      if(!defaultTheme) {
+        this.setDefaultTheme(0)
+        saveTheme(this.fileName,0)
+      }
       if (this.rendition.themes) {
-        this.rendition.themes.select(themeList(this)[this.defaultTheme||0].name)
+        console.log(defaultTheme);
+        this.rendition.themes.select(themeList(this)[defaultTheme].name)
       }
     },
   },
