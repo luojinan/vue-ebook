@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import {ThemeList} from '@/utils/config.js'
+import {themeList} from '@/utils/config.js'
 import {getFontFamily,setFontFamily,getFontSize,saveFontSize} from '@/utils/myStorage.js'
 import { ebookMixin } from '@/utils/mixin.js'
 import Epub from 'epubjs'
@@ -45,7 +45,7 @@ export default {
       }
     },
     initEpub() {
-      const url = `http://localhost:8084/${this.fileName}.epub`
+      const url = `${process.env.VUE_APP_RES_URL}/${this.fileName}.epub`
       const book = new Epub(url)
       this.rendition = book.renderTo('reader', {
         width: innerWidth,
@@ -100,7 +100,7 @@ export default {
     // themes实例注册主题颜色列表
     registerTheme(){
       if(this.rendition.themes){
-        ThemeList.forEach(item=>{
+        themeList(this).forEach(item=>{
           this.rendition.themes.register(item.name,item.style)
         })
       }
@@ -109,7 +109,7 @@ export default {
     setTheme(){
       this.setDefaultTheme(0)
       if (this.rendition.themes) {
-        this.rendition.themes.select(ThemeList[this.defaultTheme||0].name)
+        this.rendition.themes.select(themeList(this)[this.defaultTheme||0].name)
       }
     },
   },

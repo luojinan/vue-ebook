@@ -12,19 +12,19 @@
         :class="{'no-border':item.style.body.background!='#fff'}"
         :style="{'background':item.style.body.background}"
       ></div>
-      <p :class="{'selected-theme':defaultTheme==index}">{{item.name}}</p>
+      <p :class="{'selected-theme':defaultTheme==index}">{{item.desc}}</p>
     </div>
   </div>
 </template>
 
 <script>
 import {ebookMixin} from '@/utils/mixin.js'
-import {ThemeList} from '@/utils/config.js'
+import {themeList} from '@/utils/config.js'
 export default {
   mixins: [ebookMixin],
   data(){
     return {
-      themeList:ThemeList
+      themeList:themeList(this)
     }
   },
   methods: {

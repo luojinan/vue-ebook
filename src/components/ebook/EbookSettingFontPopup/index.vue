@@ -5,7 +5,7 @@
       <div class="setter-popup_title--icon" @click="closeFontFamilyPopup">
         <span class="icon-back icon"></span>
       </div>
-      <p>选择字体</p>
+      <p>{{$t('book.selectFont')}}</p>
     </div>
     <div class="setter-popup_list--wrapper">
       <div 
