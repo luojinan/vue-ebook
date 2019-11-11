@@ -11,6 +11,7 @@
 
 <script>
 import {themeList} from '@/utils/config.js'
+import {addCss} from '@/utils/cssThemes.js'
 import {
   getFontFamily,
   setFontFamily,
@@ -73,12 +74,11 @@ export default {
           this.rendition.themes.fontSize(`${fontSize}px`)  // 初始化字体大小
           this.setDefaultFontSize(fontSize)  // 本地缓存的设置存入vuex
         }
-        
       })
 
       // 要操作主题颜色的话，需要先给👆themes实例注册主题颜色列表
       this.registerTheme()
-      this.setTheme(0)  // 初始化主题颜色
+      this.setTheme()  // 初始化主题颜色
 
       // 获取locations进度对象（异步）
       book.ready.then(()=>{
@@ -111,16 +111,17 @@ export default {
         })
       }
     },
-    // 设置默认主题颜色
+    // 初始化主题颜色
     setTheme(){
       let defaultTheme = getTheme(this.fileName)
       if(!defaultTheme) {
-        this.setDefaultTheme(0)
-        saveTheme(this.fileName,0)
+        this.setDefaultTheme(0) // 存入vuex
+        saveTheme(this.fileName,0)  // 存入本地缓存
       }
       if (this.rendition.themes) {
-        console.log(defaultTheme);
-        this.rendition.themes.select(themeList(this)[defaultTheme].name)
+        const themeName = themeList(this)[defaultTheme].name
+        this.rendition.themes.select(themeName) // epubjs电子书主题颜色
+        addCss(`${process.env.VUE_APP_RES_URL}/fonts/themes/${themeName}.css`) // 项目主题颜色
       }
     },
   },

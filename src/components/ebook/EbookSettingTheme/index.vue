@@ -20,6 +20,7 @@
 <script>
 import {ebookMixin} from '@/utils/mixin.js'
 import {themeList} from '@/utils/config.js'
+import {addCss} from '@/utils/cssThemes.js'
 import {saveTheme} from '@/utils/myStorage.js'
 export default {
   mixins: [ebookMixin],
@@ -30,10 +31,11 @@ export default {
   },
   methods: {
     setTheme(index){
-      console.log('选中的主题',this.themeList[index]);
+      console.log('选中的主题',this.themeList[index].name);
       this.setDefaultTheme(index) // 存入vuex
       saveTheme(this.fileName,index)  // 存入本地缓存
-      this.currentBook.rendition.themes.select(this.themeList[index].name)
+      this.currentBook.rendition.themes.select(this.themeList[index].name)  // 电子书epubjs切换主题颜色
+      addCss(`${process.env.VUE_APP_RES_URL}/fonts/themes/${this.themeList[index].name}.css`) // 项目样式
     }
   }
 }
