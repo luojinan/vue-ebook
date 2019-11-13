@@ -10,8 +10,9 @@
 </template>
 
 <script>
-import {themeList} from '@/utils/config.js'
-import {addCss} from '@/utils/cssThemes.js'
+import { themeList } from '@/utils/config.js'
+import { addCss } from '@/utils/cssThemes.js'
+import { getLocation } from '@/utils/myStorage.js'
 import {
   getFontFamily,
   setFontFamily,
@@ -33,7 +34,7 @@ export default {
     showControl() {
       console.log('点击显示上下控制栏');
       this.setMenuVisible(!this.menuVisible)
-      this.fontFamilyVisible&&this.setFontFamilyVisible(false)  //关闭字体选择器
+      this.fontFamilyVisible && this.setFontFamilyVisible(false)  //关闭字体选择器
     },
     // 点击左边蒙板，触发ebook类的上一页方法
     prePage() {
@@ -60,63 +61,75 @@ export default {
       })
       this.setCurrentBook(book)
       // 把生成的dom渲染进页面
-      // 并初始化一些设置，字体等
-      this.rendition.display().then(()=>{
-        let font = getFontFamily(this.fileName)
-        if(!font)setFontFamily(this.fileName,this.defaultFontFamily)
-        else{
-          this.rendition.themes.font(font)  // 初始化字体
-          this.setFDefaultFontFamily(font)  // 本地缓存的设置存入vuex
-        }
-        let fontSize = getFontSize(this.fileName)
-        if(!fontSize)saveFontSize(this.fileName,this.defaultFontSize)
-        else{
-          this.rendition.themes.fontSize(`${fontSize}px`)  // 初始化字体大小
-          this.setDefaultFontSize(fontSize)  // 本地缓存的设置存入vuex
-        }
-      })
-
-      // 要操作主题颜色的话，需要先给👆themes实例注册主题颜色列表
-      this.registerTheme()
+      // 判断本地是否有进度缓存
+      const location = getLocation(this.fileName)
+      if (location) {
+        this.rendition.display(location).then(() => {
+          this.refreshLocation()
+        })
+      } else {
+        this.rendition.display().then(() => {
+          this.initFont() // 本地缓存中初始化渲染字体
+        })
+      }
+      this.registerTheme()  // 注册主题
+      this.registerFontFamily() // 注册字体
       this.setTheme()  // 初始化主题颜色
 
       // 获取locations进度对象（异步）
-      book.ready.then(()=>{
+      book.ready.then(() => {
         this.setNavigation(book.navigation) // 目录
-        return book.locations.generate()  // 进度
-      }).then(()=>{
+        return book.locations.generate(750 * (window.innerWidth / 375) * (getFontSize(this.fileName) / 16))  // 进度
+      }).then(() => {
         console.log('异步加载进度完成');
-        this.locations = book.locations
         this.setBookAvailable(true)
+        this.refreshLocation()  // 初始化获取不到进度的原因
       })
-      // 字体文件css引入epubjs库中（注册）
-     this.rendition.hooks.content.register(contents=>{
-       Promise.all([
-         contents.addStylesheet(`${process.env.VUE_APP_RES_URL}/fonts/daysOne.css`),
-         contents.addStylesheet(`${process.env.VUE_APP_RES_URL}/fonts/cabin.css`),
-         contents.addStylesheet(`${process.env.VUE_APP_RES_URL}/fonts/montserrat.css`),
-         contents.addStylesheet(`${process.env.VUE_APP_RES_URL}/fonts/tangerine.css`)
-       ]).then(()=>{
-         console.log('字体全部加载完毕')
-       })
-     }) 
-
-
+    },
+    // 从本地缓存初始化字体
+    initFont() {
+      // 字体
+      let font = getFontFamily(this.fileName)
+      if (!font) setFontFamily(this.fileName, this.defaultFontFamily)
+      else {
+        this.rendition.themes.font(font)  // 初始化字体
+        this.setFDefaultFontFamily(font)  // 本地缓存的设置存入vuex
+      }
+      // 字号
+      let fontSize = getFontSize(this.fileName)
+      if (!fontSize) saveFontSize(this.fileName, this.defaultFontSize)
+      else {
+        this.rendition.themes.fontSize(`${fontSize}px`)  // 初始化字体大小
+        this.setDefaultFontSize(fontSize)  // 本地缓存的设置存入vuex
+      }
+    },
+    // 用到hooks钩子注册字体文件
+    registerFontFamily() {
+      this.rendition.hooks.content.register(contents => {
+        Promise.all([
+          contents.addStylesheet(`${process.env.VUE_APP_RES_URL}/fonts/daysOne.css`),
+          contents.addStylesheet(`${process.env.VUE_APP_RES_URL}/fonts/cabin.css`),
+          contents.addStylesheet(`${process.env.VUE_APP_RES_URL}/fonts/montserrat.css`),
+          contents.addStylesheet(`${process.env.VUE_APP_RES_URL}/fonts/tangerine.css`)
+        ]).then(() => {
+          console.log('字体全部加载完毕')
+        })
+      })
     },
     // themes实例注册主题颜色列表
-    registerTheme(){
-      if(this.rendition.themes){
-        themeList(this).forEach(item=>{
-          this.rendition.themes.register(item.name,item.style)
+    registerTheme() {
+      if (this.rendition.themes) {
+        themeList(this).forEach(item => {
+          this.rendition.themes.register(item.name, item.style)
         })
       }
     },
     // 初始化主题颜色
-    setTheme(){
+    setTheme() {
       let defaultTheme = getTheme(this.fileName)
-      if(!defaultTheme) {
+      if (!defaultTheme) {
         this.setDefaultTheme(0) // 存入vuex
-        saveTheme(this.fileName,0)  // 存入本地缓存
+        saveTheme(this.fileName, 0)  // 存入本地缓存
       }
       if (this.rendition.themes) {
         const themeName = themeList(this)[defaultTheme].name

@@ -1,4 +1,5 @@
 import { mapGetters,mapMutations } from 'vuex'
+import {saveLocation} from '@/utils/myStorage.js'
 
 export const ebookMixin = {
   computed: {
@@ -47,6 +48,18 @@ export const ebookMixin = {
       setOffsety:'SET_OFFSETY',
       setIsBookMark:'SET_IS_BOOKMARK',
       setSpeakingIconBottom:'SET_SPEAKING_ICON_BOTTOM'
-    })
+    }),
+    
+    refreshLocation() {
+      // 获取当前进度对象，当前页面的cfi
+      const currentLocation = this.currentBook.rendition.currentLocation()
+      console.log(currentLocation, '当前进度对象')
+      const startCfi = currentLocation.start.cfi
+      saveLocation(this.fileName,startCfi)  // 把当前页面的cfi索引存入本地缓存，用于初始化
+      // 获取百分比，传入当前页面的cfi
+      const progress = this.currentBook.locations.percentageFromCfi(startCfi)
+      this.setProgress(Math.floor(progress * 100))  //转为百分值，并取整存入vuex
+      this.setSection(currentLocation.start.index)  // 当前章节存入vuex，用于初始化显示章节名
+    }
   }
 }
