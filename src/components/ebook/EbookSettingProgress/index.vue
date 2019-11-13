@@ -1,7 +1,7 @@
 <template>
   <!-- 设置进度部分 -->
   <div class="setter-progress">
-    <p v-if="bookAvailable">章节名</p>
+    <p v-if="bookAvailable">{{initReadTime()}}</p>
     <div class="setter-progress_wrapper" v-if="bookAvailable">
       <div class="icon-back icon" @click="preChapter"></div>
       <div class="progress_input">
@@ -25,6 +25,8 @@
 </template>
 <script>
 import { ebookMixin } from '@/utils/mixin.js'
+import {getReadTime} from '@/utils/myStorage.js'
+
 export default {
   mixins: [ebookMixin],
   computed: {
@@ -52,6 +54,9 @@ export default {
         this.displaySection()
       }
     },
+    initReadTime(){
+      return this.$t('book.haveRead').replace('$1',this.readTimeToMinute())
+    },
     displaySection() {
       const sectionObj = this.currentBook.section(this.section) // 传入数字获取epub章节对象
       if (sectionObj && sectionObj.href) {
@@ -61,6 +66,12 @@ export default {
         })
         console.log('要切换到第几章节', this.section)
       }
+    },
+    // 本地缓存时间秒转为分钟
+    readTimeToMinute(){
+      const readTime = getReadTime(this.fileName)
+      if(!readTime) return 0
+      else return Math.ceil(readTime/60)
     },
     // 拖动进度条时触发的事件
     progressChange(e) {
@@ -75,6 +86,10 @@ export default {
       const locationPage = precentage > 0 ? this.currentBook.locations.cfiFromPercentage(precentage) : 0  // 某进度dom对象
       this.currentBook.rendition.display(locationPage)  // 重新渲染dom对象
     },
+  },
+  created () {
+    console.log('触发组件创建，并刷新阅读时间');
+    this.initReadTime()
   }
 }
 </script>

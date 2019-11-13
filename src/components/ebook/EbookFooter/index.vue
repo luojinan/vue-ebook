@@ -14,7 +14,7 @@
     <div class="ebook-footer_setter" v-show="isShowSet&&settingVisible != 1">
       <ebook-setting-font v-if="settingVisible==4"></ebook-setting-font>
       <ebook-setting-theme v-if="settingVisible==3"></ebook-setting-theme>
-      <ebook-setting-progress v-if="settingVisible==2"></ebook-setting-progress>
+      <ebook-setting-progress v-if="settingVisible==2&&isShowSet"></ebook-setting-progress>
     </div>
   </transition>
   <!-- 设置目录部分 -->
