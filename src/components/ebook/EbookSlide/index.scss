@@ -6,19 +6,17 @@
     left: 0;
     top: 0;
     bottom: px2rem(44);
-    width: 85%;
+    width: 75%;
     z-index: 104;
     background: #fff;
     @include center;
-
-    
 
     .toc-fotter {
       position: fixed;
       left: 0;
       bottom: 0;
       height: px2rem(44);
-      width: 85%;
+      width: 75%;
       display: flex;
       justify-content: space-between;
       background-color: #fff;

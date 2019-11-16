@@ -43,8 +43,13 @@
         height: px2rem(60);
       }
       .bookinfo-left_wrapper{
+        width: px2rem(100);
         padding: 0 px2rem(10);
+        h3{
+          @include ellipsis;
+        }
         p{
+          @include ellipsis;
           font-size: px2rem(12);
         }
       }
@@ -59,6 +64,7 @@
   .toc-content_item {
     border-bottom: px2rem(1) solid #f4f4f4;
     padding: px2rem(20) px2rem(20);
+    @include ellipsis;
 
     span {
       font-size: px2rem(14);
@@ -67,11 +73,5 @@
   }
   .selected{
     font-weight: bold;
-  }
-
-  p {
-    @include center;
-    font-size: px2rem(16);
-    color: #333;
   }
 }

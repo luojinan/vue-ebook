@@ -19,10 +19,17 @@ $fonSize: 37.5; // 写死！这个fontSize不是根元素自适应那个
 }
 
 // mixin居中样式代码片段
-@mixin  center() {
+@mixin center() {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+// mixin省略号样式代码片段
+@mixin ellipsis() {
+  overflow: hidden;
+  text-overflow:ellipsis;
+  white-space: nowrap;
 }
 
 // 动画样式

@@ -35,6 +35,7 @@
 </template>
 <script>
 import { ebookMixin } from '@/utils/mixin.js'
+import { px2rem } from '@/utils/utils.js'
 import {getReadTime} from '@/utils/myStorage.js'
 export default {
   mixins: [ebookMixin],
@@ -46,7 +47,7 @@ export default {
   methods: {
     // 缩进方法
     tocItemStyle(item){
-      return {paddingLeft:`${(item.level*15)+20}px`}
+      return {paddingLeft:`${px2rem(item.level*15+20)}rem`}
     },
     initReadTime(){
       return this.$t('book.haveRead').replace('$1',this.readTimeToMinute())
