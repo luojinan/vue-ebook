@@ -6,10 +6,23 @@
       <div class="ebook-mask_center" @click="showControl"></div>
       <div class="ebook-mask_right" @click="nextPage"></div>
     </div>
+
+    <!-- 设置目录部分 -->
+    <ebook-setting-toc 
+      v-if="settingVisible==1"
+      :navigation="navigation"
+      :tocAvailable="bookAvailable"
+      @toPage="toPage"
+    ></ebook-setting-toc>
+    <!-- 目录半透明蒙板部分 -->
+    <transition name="fade">
+      <div class="toc-mask" v-show="settingVisible==1" @click="setSettingVisible(null)"></div>
+    </transition>
   </div>
 </template>
 
 <script>
+import EbookSettingToc from '@/components/ebook/EbookSlide'
 import { themeList } from '@/utils/config.js'
 import { addCss } from '@/utils/cssThemes.js'
 import { getLocation } from '@/utils/myStorage.js'
@@ -29,7 +42,18 @@ export default {
       rendition: ''
     }
   },
+  components:{
+    EbookSettingToc
+  },
   methods: {
+    // 跳转到目录页
+    toPage(item){
+      this.setMenuVisible(false)
+      this.currentBook.rendition.display(item.href).then(() => {
+        this.updateProgress();
+        // 利用then，只有输入进度改变页面，页面改变没有去获取新的进度
+      });
+    },
     // 点击中间蒙板，显示隐藏上下控制栏，带动画效果
     showControl() {
       console.log('点击显示上下控制栏');
@@ -168,6 +192,17 @@ export default {
     .ebook-mask_right {
       flex: 0 0 px2rem(100);
     }
+  }
+  // 目录半透明蒙板部分
+  .toc-mask {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 102;
+    display: flex;
+    width: 100%;
+    background: rgba(51, 51, 51, 0.8);
   }
 }
 </style>

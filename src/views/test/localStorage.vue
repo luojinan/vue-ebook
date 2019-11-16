@@ -8,7 +8,7 @@
 
 <script>
 import Storage from '@/utils/StorageClass'
-import {loadLocaleMessages} from '@/lang/index'
+// import {loadLocaleMessages} from '@/lang/index'
 export default {
   data(){
     return {
@@ -18,7 +18,7 @@ export default {
   },
   methods: {
     setStorage(){
-      console.log(loadLocaleMessages())
+      // console.log(loadLocaleMessages())
       // console.log(this.storage.set('key1',{val1:'val'},60))
     },
     getStorage(){

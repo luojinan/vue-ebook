@@ -17,16 +17,6 @@
       <ebook-setting-progress v-if="settingVisible==2&&isShowSet"></ebook-setting-progress>
     </div>
   </transition>
-  <!-- 设置目录部分 -->
-  <toc 
-    v-if="isShowSet&&settingVisible==1"
-    :navigation="navigation"
-    :tocAvailable="bookAvailable"
-    @toPage="toPage"
-  ></toc>
-  <transition name="fade">
-    <div class="toc-mask" v-show="isShowSet&&settingVisible==1" @click="isShowSet = false"></div>
-  </transition>
 
   <ebook-setting-font-popup v-if="settingVisible==4"></ebook-setting-font-popup>
 
@@ -37,7 +27,6 @@ import EbookSettingFont from '@/components/ebook/EbookSettingFont'
 import EbookSettingFontPopup from '@/components/ebook/EbookSettingFontPopup'
 import EbookSettingTheme from '@/components/ebook/EbookSettingTheme'
 import EbookSettingProgress from '@/components/ebook/EbookSettingProgress'
-import Toc from './Toc.vue'
 import {ebookMixin} from '@/utils/mixin.js'
 
 export default {
@@ -46,8 +35,7 @@ export default {
     EbookSettingFont,
     EbookSettingFontPopup,
     EbookSettingTheme,
-    EbookSettingProgress,
-    Toc
+    EbookSettingProgress
   },
   props:{
     isShow:{
@@ -65,14 +53,6 @@ export default {
     }
   },
   methods:{
-    // 跳转到目录页
-    toPage(item){
-      this.setMenuVisible(false)
-      this.currentBook.rendition.display(item.href).then(() => {
-        this.updateProgress();
-        // 利用then，只有输入进度改变页面，页面改变没有去获取新的进度
-      });
-    },
     updateProgress() {
       const curLocation = this.currentBook.rendition.currentLocation()  // 获取当前进度对象
       const percentage = this.bookAvailable // 确保而已，实际一定为true
@@ -85,6 +65,7 @@ export default {
       if(!this.isShowSet) {
         this.setSettingVisible(type)
         this.isShowSet = true
+        if(type==1) this.setMenuVisible(false)
         return
       }
       if(this.isShowSet&&(!this.settingVisible||this.settingVisible == type)) this.isShowSet = false

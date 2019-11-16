@@ -1,0 +1,42 @@
+@import '../../../scss/global.scss';
+
+.ebook-slide {
+  .toc-content {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: px2rem(44);
+    width: 85%;
+    z-index: 104;
+    background: #fff;
+    @include center;
+
+    
+
+    .toc-fotter {
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      height: px2rem(44);
+      width: 85%;
+      display: flex;
+      justify-content: space-between;
+      background-color: #fff;
+
+      p {
+        flex: 1;
+        text-align: center;
+        line-height: px2rem(44);
+        border-right: px2rem(1) solid #f4f4f4;
+
+        &:last-child {
+          border-right: none;
+        }
+      }
+      .selected{
+        font-weight: bold;
+      }
+    }
+  }
+
+}
