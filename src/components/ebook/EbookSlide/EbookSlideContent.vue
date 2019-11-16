@@ -7,70 +7,71 @@
       <p v-show="showCancel" @click="showCancel=false">{{$t('book.cancel')}}</p>
     </div>
     <!-- 头部图书信息卡片 -->
-    <!-- <div
+    <div class="toc-content_bookinfo">
+      <div class="toc-content_bookinfo--left">
+        <img :src="cover" alt="">
+        <div class="bookinfo-left_wrapper">
+          <h3>{{metadata.title}}</h3>
+          <p>{{metadata.creator}}</p>
+        </div>
+      </div>
+      <div class="toc-content_bookinfo--right">
+        <p>11%{{$t('book.haveRead2')}}</p>
+        <p>{{initReadTime()}}</p>
+      </div>
+    </div>
+    <!-- 目录列表部分 -->
+    <div
       class="toc-content_item"
-      v-for="(item,index) in navigation.toc"
+      :class="{'selected':section===index+1}"
+      :style="item.level?tocItemStyle(item):null"
+      v-for="(item,index) in navigation"
       :key="index"
       @click="toPage(item)"
     >
       <span>{{item.label}}</span>
-    </div>-->
+    </div>
   </div>
 </template>
 <script>
+import { ebookMixin } from '@/utils/mixin.js'
+import {getReadTime} from '@/utils/myStorage.js'
 export default {
+  mixins: [ebookMixin],
   data() {
     return {
       showCancel:false
     }
+  },
+  methods: {
+    // 缩进方法
+    tocItemStyle(item){
+      return {paddingLeft:`${(item.level*15)+20}px`}
+    },
+    initReadTime(){
+      return this.$t('book.haveRead').replace('$1',this.readTimeToMinute())
+    },
+    // 本地缓存时间秒转为分钟
+    readTimeToMinute(){
+      const readTime = getReadTime(this.fileName)
+      if(!readTime) return 0
+      else return Math.ceil(readTime/60)
+    },
+    // 跳转到目录页
+    toPage(item){
+      this.setSettingVisible(null)
+      this.currentBook.rendition.display(item.href).then(() => {
+        // 刷新进度显示
+        this.refreshLocation()
+      });
+    }
+  },
+  created () {
+    console.log('触发组件创建，并刷新阅读时间');
+    this.initReadTime()
   }
 }
 </script>
 <style lang="scss" scoped>
-@import "../../../scss/global.scss";
-
-.toc-content_wrapper {
-  width: 100%;
-  height: 100%;
-  overflow: auto; // 超出部分加滚动条
-  .toc-content_serach{
-    display: flex;
-    width: 100%;
-    height: px2rem(36);
-    margin: px2rem(20) 0 px2rem(10) 0;
-    padding-right: px2rem(15);
-    box-sizing: border-box;
-    .icon-menu{
-      flex: 0 0 px2rem(28);
-      @include center;
-    }
-    input{
-      height: px2rem(24);
-      flex: 1;
-      align-self: center;
-      background: transparent;
-      border: px2rem(1) solid #ccc;
-    }
-    p{
-      flex: 0 0 px2rem(50);
-      font-size: px2rem(12);
-      @include center;
-    }
-  }
-  .toc-content_item {
-    border-bottom: px2rem(1) solid #f4f4f4;
-    padding: px2rem(20) px2rem(20);
-
-    span {
-      font-size: px2rem(14);
-      color: #333;
-    }
-  }
-
-  p {
-    @include center;
-    font-size: px2rem(16);
-    color: #333;
-  }
-}
+@import "./EbookSlideContent.scss";
 </style>

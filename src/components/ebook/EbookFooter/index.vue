@@ -53,13 +53,6 @@ export default {
     }
   },
   methods:{
-    updateProgress() {
-      const curLocation = this.currentBook.rendition.currentLocation()  // 获取当前进度对象
-      const percentage = this.bookAvailable // 确保而已，实际一定为true
-        ? this.currentBook.locations.percentageFromCfi(curLocation.start.cfi) // 获取进度的具体比例%
-        : 0;
-      this.setProgress(Math.round(percentage * 100))   // 进度比例转化为数值
-    },
     // 切换底部操作栏-同时显示相应设置部分
     showSet(type){
       if(!this.isShowSet) {

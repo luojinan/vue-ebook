@@ -21,10 +21,6 @@ export default {
     EbookSlideContent
   },
   props:{
-    navigation:{
-      type:Object,
-      default:()=>{}
-    },
     tocAvailable:{
       type:Boolean,
       default:false
@@ -35,12 +31,6 @@ export default {
       currentTab:1,
       toc:EbookSlideContent,
       bookmark:null
-    }
-  },
-  methods:{
-    toPage(item){
-      console.log('跳转到页面',item);
-      this.$emit('toPage',item)
     }
   }
 }

@@ -12,7 +12,6 @@
       v-if="settingVisible==1"
       :navigation="navigation"
       :tocAvailable="bookAvailable"
-      @toPage="toPage"
     ></ebook-setting-toc>
     <!-- 目录半透明蒙板部分 -->
     <transition name="fade">
@@ -24,6 +23,7 @@
 <script>
 import EbookSettingToc from '@/components/ebook/EbookSlide'
 import { themeList } from '@/utils/config.js'
+import { flatten } from '@/utils/flatten.js'
 import { addCss } from '@/utils/cssThemes.js'
 import { getLocation } from '@/utils/myStorage.js'
 import {
@@ -46,14 +46,6 @@ export default {
     EbookSettingToc
   },
   methods: {
-    // 跳转到目录页
-    toPage(item){
-      this.setMenuVisible(false)
-      this.currentBook.rendition.display(item.href).then(() => {
-        this.updateProgress();
-        // 利用then，只有输入进度改变页面，页面改变没有去获取新的进度
-      });
-    },
     // 点击中间蒙板，显示隐藏上下控制栏，带动画效果
     showControl() {
       console.log('点击显示上下控制栏');
@@ -100,14 +92,41 @@ export default {
       this.registerFontFamily() // 注册字体
       this.setTheme()  // 初始化主题颜色
 
+      this.getBookInfo(book)  // 获取图书信息
       // 获取locations进度对象（异步）
       book.ready.then(() => {
-        this.setNavigation(book.navigation) // 目录
         return book.locations.generate(750 * (window.innerWidth / 375) * (getFontSize(this.fileName) / 16))  // 进度
       }).then(() => {
         console.log('异步加载进度完成');
         this.setBookAvailable(true)
         this.refreshLocation()  // 初始化获取不到进度的原因
+      })
+    },
+    getBookInfo(book){
+      // 获取图书封面
+      book.loaded.cover.then(cover=>{
+        book.archive.createUrl(cover).then(url=>{
+          this.setCover(url)  // 图书封面存入vuex
+        })
+      })
+      // 获取图片
+      book.loaded.metadata.then(metadata=>{
+        this.setMetadata(metadata)
+      })
+      book.loaded.navigation.then(nav=>{
+        // 把一维数组转换为多维数组
+        const newArr = flatten(nav.toc)
+        console.log(newArr,'重构后的目录数组');
+        function find(item,level=0) {
+          return !item.parent?level:find(newArr.filter(parentItem=>{
+            return parentItem.id === item.parent
+          })[0],++level)
+        }
+        newArr.forEach(item => {
+          item.level = find(item)
+        })
+        console.log(newArr,'带上层级的目录数组');
+        this.setNavigation(newArr)
       })
     },
     // 从本地缓存初始化字体
