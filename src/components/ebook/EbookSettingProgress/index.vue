@@ -31,14 +31,15 @@ export default {
   mixins: [ebookMixin],
   computed: {
     chapterName() {
-      if (this.section) {
-        const sectionObj = this.currentBook.section(this.section)
-        if (sectionObj && sectionObj.href) {
-          // 通过章节href获取目录，获取当前章节名
-          return this.currentBook.navigation.get(sectionObj.href).label
-        }
-      }
-      return ''
+      // if (this.section) {
+        // const sectionObj = this.currentBook.section(this.section)
+        // if (sectionObj && sectionObj.href) {
+        //   // 通过章节href获取目录，获取当前章节名
+        //   return this.currentBook.navigation.get(sectionObj.href).label
+        // }
+      // }
+      // return ''
+      return this.section?this.navigation[this.section-1].label:''
     }
   },
   methods: {
