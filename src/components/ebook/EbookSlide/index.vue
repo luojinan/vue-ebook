@@ -2,9 +2,9 @@
 <div class="ebook-slide">
   <transition name="slide-right">
     <div class="toc-content">
-      <!-- <p v-if="!tocAvailable">加载中...</p> -->
+      <!-- <p v-if="!bookAvailable">加载中...</p> -->
       <!-- 动态组件 -->
-      <component v-if="bookAvailable" :is="currentTab===1?toc:bookmark"></component>
+      <component v-if="false" :is="currentTab===1?toc:bookmark"></component>
       <!-- 目录加载中状态 -->
       <ebook-loading v-else></ebook-loading>
       
