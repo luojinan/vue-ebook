@@ -3,6 +3,7 @@
     <ebook-header v-show="menuVisible"></ebook-header>
     <ebook-reader></ebook-reader>
     <ebook-footer :isShow="menuVisible"></ebook-footer>
+    <ebook-background></ebook-background>
   </div>
 </template>
 
@@ -10,6 +11,7 @@
 import EbookHeader from '@/components/ebook/EbookHeader'
 import EbookFooter from '@/components/ebook/EbookFooter'
 import EbookReader from '@/components/ebook/EbookReader'
+import EbookBackground from '@/components/ebook/EbookBackground'
 import {ebookMixin} from '@/utils/mixin.js'
 import {getReadTime,saveReadTime} from '@/utils/myStorage.js'
 
@@ -18,7 +20,8 @@ export default {
   components:{
     EbookHeader,
     EbookFooter,
-    EbookReader
+    EbookReader,
+    EbookBackground
   },
   data(){
     return {

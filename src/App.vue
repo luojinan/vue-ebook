@@ -21,6 +21,9 @@ document.addEventListener('DOMContentLoaded',()=>{
 <style lang="scss">
 @import "scss/style.scss";
 @import 'scss/global';
+body{
+  background-color: #ccc;
+}
 #app {
   font-size: px2rem(14);
 }
