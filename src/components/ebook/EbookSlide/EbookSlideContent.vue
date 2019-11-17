@@ -17,7 +17,9 @@
       <p 
         class="search-list_item"
         v-for="(item,index) in searchList"
-        :key="index" v-html="item.excerpt"></p>
+        :key="index" 
+        @click="toPage(item.cfi,true)"
+        v-html="item.excerpt"></p>
     </div>
     <!-- 头部图书信息卡片 -->
     <div class="toc-content_bookinfo" v-show="!showCancel">
@@ -41,7 +43,7 @@
       :style="item.level?tocItemStyle(item):null"
       v-for="(item,index) in navigation"
       :key="index"
-      @click="toPage(item)"
+      @click="toPage(item.href)"
     >
       <span>{{item.label}}</span>
     </div>
@@ -111,11 +113,13 @@ export default {
       else return Math.ceil(readTime/60)
     },
     // 跳转到目录页
-    toPage(item){
+    toPage(href,highlight=false){
       this.setSettingVisible(null)
-      this.currentBook.rendition.display(item.href).then(() => {
+      this.currentBook.rendition.display(href).then(() => {
         // 刷新进度显示
         this.refreshLocation()
+        // 高亮显示
+        highlight&&this.currentBook.rendition.annotations.highlight(href)
       });
     }
   },
