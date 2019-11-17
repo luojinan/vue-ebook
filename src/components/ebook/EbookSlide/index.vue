@@ -4,21 +4,29 @@
     <div class="toc-content">
       <!-- <p v-if="!tocAvailable">加载中...</p> -->
       <!-- 动态组件 -->
-      <component :is="currentTab===1?toc:bookmark"></component>
+      <component v-if="bookAvailable" :is="currentTab===1?toc:bookmark"></component>
+      <!-- 目录加载中状态 -->
+      <ebook-loading v-else></ebook-loading>
+      
       <!-- 底部选项卡部分 -->
       <div class="toc-fotter">
         <p :class="{'selected':currentTab===1}" @click="currentTab=1">{{$t('book.navigation')}}</p>
         <p :class="{'selected':currentTab===2}" @click="currentTab=2">{{$t('book.bookmark')}}</p>
       </div>
     </div>
+    
   </transition>
 </div>
 </template>
 <script>
 import EbookSlideContent from './EbookSlideContent.vue'
+import EbookLoading from '../EbookLoading/index'
+import { ebookMixin } from '@/utils/mixin.js'
 export default {
+  mixins: [ebookMixin],
   components:{
-    EbookSlideContent
+    EbookSlideContent,
+    EbookLoading
   },
   props:{
     tocAvailable:{
