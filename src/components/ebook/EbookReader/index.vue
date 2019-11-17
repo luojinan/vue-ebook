@@ -1,11 +1,7 @@
 <template>
   <div class="ebook-reader">
     <div id="reader"></div>
-    <div class="ebook-mask">
-      <div class="ebook-mask_left" @click="prePage"></div>
-      <div class="ebook-mask_center" @click="showControl"></div>
-      <div class="ebook-mask_right" @click="nextPage"></div>
-    </div>
+    <div class="ebook-mask" @click="onClickMask"></div>
 
     <!-- 设置目录部分 -->
     <ebook-setting-toc 
@@ -51,6 +47,13 @@ export default {
       console.log('点击显示上下控制栏');
       this.setMenuVisible(!this.menuVisible)
       this.fontFamilyVisible && this.setFontFamilyVisible(false)  //关闭字体选择器
+    },
+    onClickMask(e){
+      const offsetX = e.offsetX // 点击到的x坐标
+      const width = window.innerWidth // 项目的窗口宽度（x最大值）
+      if(offsetX>0&&offsetX<width*0.3) this.prePage()
+      else if(offsetX>0&&offsetX>width*0.7) this.nextPage()
+      else this.showControl()
     },
     // 点击左边蒙板，触发ebook类的上一页方法
     prePage() {
@@ -202,15 +205,6 @@ export default {
     width: 100%;
     height: 100%;
     z-index: 100;
-    .ebook-mask_left {
-      flex: 0 0 px2rem(100);
-    }
-    .ebook-mask_center {
-      flex: 1;
-    }
-    .ebook-mask_right {
-      flex: 0 0 px2rem(100);
-    }
   }
   // 目录半透明蒙板部分
   .toc-mask {
