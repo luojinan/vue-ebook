@@ -1,7 +1,10 @@
 <template>
   <div class="ebook-reader">
     <div id="reader"></div>
-    <div class="ebook-mask" @click="onClickMask"></div>
+    <div class="ebook-mask" 
+      @click="onClickMask"
+      @touchmove="move"
+      @touchend="moveEnd"></div>
 
     <!-- 设置目录部分 -->
     <ebook-setting-toc 
@@ -35,18 +38,29 @@ export default {
   mixins: [ebookMixin],
   data() {
     return {
-      rendition: ''
+      rendition: '',
+      firstOffsetY:''
     }
   },
   components:{
     EbookSettingToc
   },
   methods: {
-    // 点击中间蒙板，显示隐藏上下控制栏，带动画效果
-    showControl() {
-      console.log('点击显示上下控制栏');
-      this.setMenuVisible(!this.menuVisible)
-      this.fontFamilyVisible && this.setFontFamilyVisible(false)  //关闭字体选择器
+    move(e){
+      let offsetY = 0
+      // 获取拖动的起始Y坐标（使用moveStart好像也可以）
+      if(!this.firstOffsetY){
+        this.firstOffsetY = e.changedTouches[0].clientY
+      }else{
+        offsetY = e.changedTouches[0].clientY-this.firstOffsetY
+        this.setOffsety(offsetY)  // 拖动的长度存入vuex
+      }
+      e.preventDefault()  // 禁止默认方法
+      e.stopPropagation() // 禁止事件传递（冒泡等？）
+    },
+    moveEnd(){
+      this.setOffsety(0)  // 清除vuex
+      this.firstOffsetY = 0 // 重置拖动的起始Y坐标
     },
     onClickMask(e){
       const offsetX = e.offsetX // 点击到的x坐标
@@ -54,6 +68,12 @@ export default {
       if(offsetX>0&&offsetX<width*0.3) this.prePage()
       else if(offsetX>0&&offsetX>width*0.7) this.nextPage()
       else this.showControl()
+    },
+    // 点击中间蒙板，显示隐藏上下控制栏，带动画效果
+    showControl() {
+      console.log('点击显示上下控制栏');
+      this.setMenuVisible(!this.menuVisible)
+      this.fontFamilyVisible && this.setFontFamilyVisible(false)  //关闭字体选择器
     },
     // 点击左边蒙板，触发ebook类的上一页方法
     prePage() {

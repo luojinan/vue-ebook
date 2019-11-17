@@ -1,5 +1,5 @@
 <template>
-  <div class="ebook">
+  <div class="ebook" ref="ebook">
     <ebook-header v-show="menuVisible"></ebook-header>
     <ebook-reader></ebook-reader>
     <ebook-footer :isShow="menuVisible"></ebook-footer>
@@ -25,7 +25,23 @@ export default {
       readTimer:null
     }
   },
+  watch:{
+    offsetY(val){
+      if(val>0) this.moveDown(val)
+      else if(val==0) this.moveBack()
+    }
+  },
   methods: {
+    moveDown(val){
+      this.$refs.ebook.style.top = `${val}px`
+    },
+    moveBack(){
+      this.$refs.ebook.style.top = 0
+      this.$refs.ebook.style.transition = 'all .2s linear'
+      setTimeout(()=>{
+        this.$refs.ebook.style.transition=''
+      },200)
+    },
     readTimerFn(){
       let time = getReadTime(this.fileName) // 本地缓存中获取阅读时间
       if(!time) time = 0  // 当本地缓存没有时间，重置为0开始计算
@@ -45,5 +61,10 @@ export default {
 </script>
 <style lang="scss" scoped>
 .ebook {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
 }
 </style>
