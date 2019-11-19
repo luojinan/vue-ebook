@@ -7,7 +7,7 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    redirect: '/test/localStorage'
+    redirect: '/ebook/Wonder'
   },
   {
     path: '/test/localStorage',

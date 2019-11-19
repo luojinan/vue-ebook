@@ -30,12 +30,13 @@ export default {
   },
   watch:{
     offsetY(val){
-      if(val>0) this.moveDown(val)
-      else if(val==0) this.moveBack()
+      if(this.menuVisible) return // 底部操作栏打开是，下拉有存值，但不触发事件
+      if(val==0) this.moveBack()
+      else this.moveDownOrUp(val)
     }
   },
   methods: {
-    moveDown(val){
+    moveDownOrUp(val){
       this.$refs.ebook.style.top = `${val}px`
     },
     moveBack(){

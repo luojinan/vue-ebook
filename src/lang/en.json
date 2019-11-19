@@ -4,6 +4,7 @@
     "releaseAddMark": "Release to add bookmark",
     "pulldownDeleteMark": "Pull down to delete bookmark",
     "releaseDeleteMark": "Release to add bookmark",
+    "pullupToBack":"Pull up return to the bookcase",
     "selectFont": "Select Font",
     "haveRead": "Already read $1 minutes",
     "themeDefault": "Default",

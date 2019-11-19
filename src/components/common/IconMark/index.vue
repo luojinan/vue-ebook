@@ -1,43 +1,44 @@
 <template>
-  <div class="icon-mark" ref="iconMark"></div>
+  <div class="icon-mark" :style="{'border-color':watcherColor}" ref="iconMark"></div>
 </template>
 
 <script>
-import {px2rem} from '@/utils/utils.js'
+import { px2rem } from '@/utils/utils.js'
 export default {
-  props:{
-    color:{
-      type:String,
-      default:''
+  props: {
+    color: {
+      type: String,
+      default: ''
     },
-    width:{
-      type:[String,Number],
-      default:''
+    width: {
+      type: [String, Number],
+      default: ''
     },
-    height:{
-      type:[String,Number],
-      default:''
+    height: {
+      type: [String, Number],
+      default: ''
     }
   },
-  methods:{
-    resetStyle(){
-      if(this.width&&this.height){
-        const borderWidth = `${px2rem(this.height-5)}rem ${px2rem(this.width/2)}rem ${px2rem(5)}rem ${px2rem(this.width/2)}rem`
+  computed: {
+    watcherColor() {
+      return `${this.color} ${this.color} transparent ${this.color}`
+    }
+  },
+  methods: {
+    resetStyle() {
+      if (this.width && this.height) {
+        const borderWidth = `${px2rem(this.height - 5)}rem ${px2rem(this.width / 2)}rem ${px2rem(5)}rem ${px2rem(this.width / 2)}rem`
         this.$refs.iconMark.style.borderWidth = borderWidth
       }
-      if(this.color){
-        const borderColor = `${this.color} ${this.color} transparent ${this.color}`
-        this.$refs.iconMark.style.borderColor = borderColor
-      }
     }
   },
-  mounted(){
+  mounted() {
     this.resetStyle()
   }
 }
 </script>
 <style lang="scss" scoped>
-@import '../../../scss/global.scss';
+@import "../../../scss/global.scss";
 .icon-mark {
   width: 0;
   height: 0;
