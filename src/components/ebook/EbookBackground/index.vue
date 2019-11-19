@@ -5,7 +5,7 @@
         <span ref="iconDown">↓</span>
         <p>{{text}}</p>
       </div>
-      <div class="ebook-background_top--icon">
+      <div class="ebook-background_top--icon" :style="isFixed?fixedStyle:{}">
         <icon-mark :color="color"></icon-mark>
       </div>
     </div>
@@ -22,10 +22,19 @@ export default {
   components: {
     IconMark
   },
+  computed:{
+    fixedStyle(){
+      return {
+         position: 'fixed',
+         top: 0
+      }
+    }
+  },
   data() {
     return {
       color: '#fff',
-      text: this.$t('book.pulldownAddMark')
+      text: this.isBookmark?this.$t('book.pulldownDeleteMark'):this.$t('book.pulldownAddMark'),
+      isFixed:false
     }
   },
   watch: {
@@ -38,15 +47,36 @@ export default {
         // 1).手指拖动不松手，由下往上回去(相当于取消下拉!=移除书签)
         if (iconDown === 'rotate(180deg)') {
           this.$refs.iconDown.style.transform = 'rotate(0)'
+        }
+        //当前页是书签页（移除书签）
+        if(this.isBookmark){
+          this.text = this.$t('book.pulldownDeleteMark') // '下拉移除'
+          this.color = '#346cbc'
+        }else{
+          this.text = this.$t('book.pulldownAddMark') // '下拉移除'
           this.color = '#fff'
-          this.text = this.$t('book.pulldownAddMark')
         }
       } else if (val >= 70) {
         this.$refs.ebookBackgroundTop.style.top = `${-val}px`
         // 2、到达添加书签的高度，添加成功样式
-        this.color = '#346cbc'  // 书签颜色变蓝色
-        this.$refs.iconDown.style.transform = 'rotate(180deg)' // ↓变为↑
-        this.text = this.$t('book.releaseAddMark') // '下拉添加'变为'释放添加'
+        if(!this.isBookmark) {
+          // 当前页面不是书签页（添加书签）
+          this.color = '#346cbc'  // 书签颜色变蓝色
+          this.$refs.iconDown.style.transform = 'rotate(180deg)' // ↓变为↑
+          this.text = this.$t('book.releaseAddMark') // '下拉添加'变为'释放添加'
+          this.isFixed = true
+        }
+        else {
+          // 当前页面已经是书签页（移除书签）
+          this.color = '#fff'  // 书签颜色变蓝色
+          this.$refs.iconDown.style.transform = 'rotate(180deg)' // ↓变为↑
+          this.text = this.$t('book.releaseDeleteMark') // '下拉添加'变为'释放添加'
+          this.isFixed = false
+        }
+      } else if (val === 0) {
+          this.$refs.iconDown.style.transform = 'rotate(0)' // ↑复位为↓
+          if(!this.isBookmark) this.setIsBookMark(true)
+          else this.setIsBookMark(false)
       }
     }
   }
