@@ -17,24 +17,21 @@
 <script>
 import IconMark from '@/components/common/IconMark'
 import { ebookMixin } from '@/utils/mixin.js'
+import { getBookmark, saveBookmark } from '@/utils/myStorage.js'
 export default {
   mixins: [ebookMixin],
   components: {
     IconMark
   },
-  computed:{
-    fixedStyle(){
-      return {
-         position: 'fixed',
-         top: 0
-      }
-    }
-  },
   data() {
     return {
-      color: '#fff',
+      color: this.isBookmark ? '#fff': '#346cbc',
       text: this.isBookmark?this.$t('book.pulldownDeleteMark'):this.$t('book.pulldownAddMark'),
-      isFixed:false
+      isFixed:false,
+      fixedStyle:{
+        position: 'fixed',
+        top: 0
+      }
     }
   },
   watch: {
@@ -59,25 +56,67 @@ export default {
       } else if (val >= 70) {
         this.$refs.ebookBackgroundTop.style.top = `${-val}px`
         // 2、到达添加书签的高度，添加成功样式
+        this.$refs.iconDown.style.transform = 'rotate(180deg)' // ↓变为↑
         if(!this.isBookmark) {
           // 当前页面不是书签页（添加书签）
           this.color = '#346cbc'  // 书签颜色变蓝色
-          this.$refs.iconDown.style.transform = 'rotate(180deg)' // ↓变为↑
           this.text = this.$t('book.releaseAddMark') // '下拉添加'变为'释放添加'
           this.isFixed = true
-        }
-        else {
+        }else {
           // 当前页面已经是书签页（移除书签）
           this.color = '#fff'  // 书签颜色变蓝色
-          this.$refs.iconDown.style.transform = 'rotate(180deg)' // ↓变为↑
           this.text = this.$t('book.releaseDeleteMark') // '下拉添加'变为'释放添加'
           this.isFixed = false
         }
       } else if (val === 0) {
-          this.$refs.iconDown.style.transform = 'rotate(0)' // ↑复位为↓
-          if(!this.isBookmark) this.setIsBookMark(true)
-          else this.setIsBookMark(false)
+        // 3、松手页面复位到0时，存入vuex是否书签
+        this.$refs.iconDown.style.transform = 'rotate(0)' // ↑复位为↓
+        if(!this.isBookmark) this.setBookMark()
+        else this.removeBookMark()
       }
+    },
+    // 当页面有书签时，样式进行改变
+    isBookmark(val) {
+      this.isFixed = val;
+      // this.color = val ? BLUE : WHITE;
+    }
+  },
+  methods:{
+    // 存入书签(vuex、本地缓存)
+    setBookMark(){
+      // 获取当前cfi的同时，获取当前页面的文本内容
+      const {start,end} = this.currentBook.rendition.currentLocation()
+      const cfiBase = start.cfi.replace(/!.*/,"").replace("epubcfi(","")
+      const cfiStart = start.cfi.replace(/.*!/, "").replace(/\)/, "")
+      const cfiEnd = end.cfi.replace(/.*!/,"").replace(/\)/,"")
+      // 用于获取当前页面文本内容的cfi字符串
+      const cfiRangeString = `epubcfi(${cfiBase}!,${cfiStart},${cfiEnd})`
+      let bookMarks = getBookmark(this.fileName) || []  // 本地缓存中的书签数组
+      // console.log(cfiRangeString,'cfi字符串');
+      console.log('存入缓存的cfi',start.cfi);
+      // 获取当前页面的文本内容range
+      this.currentBook.getRange(cfiRangeString).then(range=>{
+        console.log(range,'获取页面文本内容');
+        bookMarks.push({
+          cfi: start.cfi,
+          text: range.toString().replace(/\s\s/,"")
+        })
+        this.setIsBookMark(true)  // 存入vuex（只当前页书签标志符，不需要数组）
+        saveBookmark(this.fileName, bookMarks)  // 本地缓存中的书签数组
+      })
+    },
+    // 移除书签（vuex、本地缓存）
+    removeBookMark(){
+      const {start} = this.currentBook.rendition.currentLocation()
+      let bookMarks = getBookmark(this.fileName) || []  // 本地缓存中的书签数组
+
+      // 移除当前书签对象后的书签数组
+      const newArr = bookMarks.filter(item=>{
+        return item.cfi !== start.cfi
+      })
+
+      this.setIsBookMark(false)  // 存入vuex（只当前页书签标志符，不需要数组）
+      saveBookmark(this.fileName, newArr) // 存入本地缓存
     }
   }
 }

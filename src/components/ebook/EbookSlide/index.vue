@@ -20,12 +20,14 @@
 </template>
 <script>
 import EbookSlideContent from './EbookSlideContent.vue'
+import EbookSlideMark from './EbookSlideMark.vue'
 import EbookLoading from '../EbookLoading/index'
 import { ebookMixin } from '@/utils/mixin.js'
 export default {
   mixins: [ebookMixin],
   components:{
     EbookSlideContent,
+    EbookSlideMark,
     EbookLoading
   },
   props:{
@@ -38,7 +40,7 @@ export default {
     return {
       currentTab:1,
       toc:EbookSlideContent,
-      bookmark:null
+      bookmark: EbookSlideMark
     }
   }
 }

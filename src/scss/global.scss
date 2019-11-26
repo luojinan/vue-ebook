@@ -32,6 +32,18 @@ $fonSize: 37.5; // 写死！这个fontSize不是根元素自适应那个
   white-space: nowrap;
 }
 
+// mixin多行省略号样式代码片段
+@mixin ellipsis2($line) {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: $line;
+  word-break: keep-all;
+  white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  overflow-wrap: break-word;
+}
+
 // 动画样式
 .slide-down-enter, .slide-down-leave-to{
   transform: translate3d(0, -100%,0); // 向下动画

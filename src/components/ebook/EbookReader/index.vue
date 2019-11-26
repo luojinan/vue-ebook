@@ -81,6 +81,7 @@ export default {
       if (this.rendition) {
         this.rendition.prev()
         this.menuVisible && (this.setMenuVisible(false))
+        this.refreshLocation()
       }
     },
     // 点击左边蒙板，触发ebook类的下一页方法
@@ -89,6 +90,7 @@ export default {
       if (this.rendition) {
         this.rendition.next()
         this.menuVisible && (this.setMenuVisible(false))
+        this.refreshLocation()
       }
     },
     initEpub() {
