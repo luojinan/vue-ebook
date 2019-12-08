@@ -1,6 +1,8 @@
 <template>
   <div class="ebook-reader">
+    <ebook-header></ebook-header>
     <div id="reader"></div>
+    <ebook-footer></ebook-footer>
     <div class="ebook-mask" 
       @click="onClickMask"
       @touchmove="move"
@@ -20,6 +22,8 @@
 </template>
 
 <script>
+import EbookHeader from './EbookHeader'
+import EbookFooter from './EbookFooter'
 import EbookSettingToc from '@/components/ebook/EbookSlide'
 import { themeList } from '@/utils/config.js'
 import { flatten } from '@/utils/flatten.js'
@@ -43,7 +47,9 @@ export default {
     }
   },
   components:{
-    EbookSettingToc
+    EbookSettingToc,
+    EbookHeader,
+    EbookFooter
   },
   methods: {
     move(e){
@@ -98,7 +104,8 @@ export default {
       const book = new Epub(url)
       this.rendition = book.renderTo('reader', {
         width: innerWidth,
-        height: innerHeight
+        height: innerHeight,
+        method:'default'
       })
       this.setCurrentBook(book)
       // 把生成的dom渲染进页面

@@ -77,7 +77,6 @@ export default {
       })
     },
     doSearch(searchText){
-      console.log(searchText)
       // 使用epub的搜索功能，是promise事件
       // 且没有直接全文搜索的api，而是需要一章一章的搜索，因此需要遍历
       return Promise.all(

@@ -1,3 +1,5 @@
+import {realPx} from './utils'
+
 export function themeList(vue) {
   return [{
       name: '默认', // 用于传入epubjs切换主题（只传中文）
@@ -5,7 +7,8 @@ export function themeList(vue) {
       style: {
         body: {
           color: '#000',
-          background: '#fff'
+          background: '#fff',
+          padding: `${realPx(28)}px 0 !important`
         }
       }
     },
@@ -15,7 +18,8 @@ export function themeList(vue) {
       style: {
         body: {
           color: '#000',
-          background: '#ceeaba'
+          background: '#ceeaba',
+          padding: `${realPx(28)}px 0 !important`
         }
       }
     },
@@ -25,7 +29,8 @@ export function themeList(vue) {
       style: {
         body: {
           color: '#fff',
-          background: '#000'
+          background: '#000',
+          padding: `${realPx(28)}px 0 !important`
         }
       }
     },
@@ -35,7 +40,8 @@ export function themeList(vue) {
       style: {
         body: {
           color: '#000',
-          background: '#FFD700'
+          background: '#FFD700',
+          padding: `${realPx(28)}px 0 !important`
         }
       }
     }
